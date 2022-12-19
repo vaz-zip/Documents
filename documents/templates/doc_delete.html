@@ -1,0 +1,52 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+<!-- Название у нас будет Product -->
+{% block title %}
+Document
+{% endblock title %}
+{% block content %}
+<h2>Вы действительно хотите удалить это документ без восстановления?</h2>
+<table>
+    <tr>
+        <td>Название</td>
+        <td>Описание</td>
+        <td>Тип документа</td>
+        <td>№ документа</td>
+        <td>Дата документа</td>
+        <td>Скан</td>
+    </tr>
+   
+    <!-- Для каждого товара будете генерироваться новая строчка,
+
+    т.е. новый HTML код, который указан в теле цикла.
+    При этом сам цикл работает точно так же, как и в Python.
+    product — переменная цикла, т.е. наш товар полученный из списка -->
+    
+    <tr>
+        <!-- Не забываем, что переменные в шаблоне ничем не отличаются
+
+         от переменных в Python. Здесь также можно получать доступ к
+         полям объекта модели. Например, здесь мы выводим имя,
+         в следующем столбце описание, и т.д.  -->
+        <td>{{ document.title|truncatechars:7}}</td>
+        <td>{{ document.textDocument|truncatechars:12}}</td>
+        <td>{{ document.category }}</td>
+        <td>{{ document.number }}</td>
+        <td>{{ document.dateCreate|date:'d M Y'}}</td>
+        <img src="{{MEDIA_URL}} {{ document.image }}">Scan</img>
+         
+           
+            
+
+
+    </tr>
+    
+
+</table>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Подтвердить удаление"></form>
+
+{% endblock content %}

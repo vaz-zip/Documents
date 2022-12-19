@@ -1,0 +1,59 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+
+<!-- Название у нас будет Product -->
+{% block title %}
+Document
+{% endblock title %}
+{% block content %}
+
+<table class="table table-striped">
+    <thead>
+       <tr>
+           <th scope="col">Название</th>
+           <th scope="col">Описание</th>
+           <th scope="col">Тип документа</th>
+           <th scope="col">№ документа</th>
+           <th scope="col">Дата документа</th>
+             
+       </tr>
+    </thead>
+    
+   
+    <tr>
+            
+        <th scope="row">{{ document.title }}</th>  
+        <th scope="row"><div>{{ document.textDocument }}</div></th>
+        <th scope="row">{{ document.category }}</th>
+        <th scope="row">{{ document.number }}</th>
+        <th scope="row">{{ document.dateCreate|date:'d M Y'}}</th>
+        
+    </tr>
+    
+ </tbody>
+</table>
+<body>
+    <div>
+    {% for image in document.images.all %}
+
+       <img src="{{ image.file.url }}"></img>
+
+    {% endfor %}
+
+    <p></p>
+    <p></p>
+    </div>
+    <form action="{% url '_edit' document.id %}" target="_blank">
+        <button>Редактировать документ</button>
+    </form>
+
+    <p></p>
+    <p></p>
+
+    <form action="{% url 'doc_delete' document.id %}" target="_blank">
+        <button>Удаление документа</button>
+    </form>
+    
+</body>
+{% endblock content %}
