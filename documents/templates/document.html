@@ -37,7 +37,7 @@ Document
     <div>
     {% for image in document.images.all %}
 
-       <img src="{{ image.file.url }}"></img>
+       <img src="{{ image.file.url }}" width="400px" height="400px"></img>
 
     {% endfor %}
 

@@ -5,14 +5,15 @@ from .models import Document
 
 
 class DocumentsForm(forms.ModelForm):
+    images = forms.ImageField(label='Фото', widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
     class Meta:
         model = Document
         widgets = {
-            'dateCreate' : forms.DateInput(attrs={'type': 'date'})
+            'dateCreate' : forms.DateInput(attrs={'type': 'date'}),
         }
         
-
-        fields = ['title','category', 'textDocument', 'number', 'dateCreate']
+        fields = ['title', 'category', 'textDocument', 'number', 'dateCreate', 'images']
         
 
 

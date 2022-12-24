@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from datetime import datetime
 
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
@@ -6,6 +7,7 @@ from .models import Document, Image
 from .filters import DocFilter
 from .models import *
 from .forms import DocumentsForm
+
 
 class DocumentList(ListView):
     model = Document, Image
@@ -49,19 +51,29 @@ def doc_filter(request):
 
 class DocumentCreateView(CreateView):
     template_name = '_add.html'
-    form_class = DocumentsForm 
-    # queryset = Image.objects.all()  
-
-    # Document.objects.get().images_set.all()
-
-    # def image(self, request, pk):
-    #     return super().post(request, pk)
+    form_class = DocumentsForm
+    
+    def get_success_url(self) -> str:
+        return '/documents/'
+    
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        files = request.FILES.getlist('images')
+        if form.is_valid():
+            form.cleaned_data.pop('images')
+            document = Document.objects.create(**form.cleaned_data)
+            Image.objects.bulk_create(
+                [Image(file=file, document=document) for file in files]
+            )
+            return redirect(self.get_success_url())
+        else:
+            return self.form_invalid(form)
 
 
 class DocumentUpdateView(UpdateView):
     template_name = '_edit.html'
     form_class = DocumentsForm
- 
     
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
